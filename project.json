@@ -1,0 +1,18 @@
+{
+ "name": "Commitment",
+ "description": "Enter your project description",
+ "author": {
+  "name": "Max Taylor-Davies",
+  "email": "maxtaylordavies@gmail.com"
+ },
+ "version": "0.1.0",
+ "binaryname": "commitment",
+ "frontend": {
+  "dir": "frontend",
+  "install": "npm install",
+  "build": "npm run build",
+  "bridge": "src",
+  "serve": "npm run start"
+ },
+ "WailsVersion": ""
+}
