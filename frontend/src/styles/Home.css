@@ -23,3 +23,17 @@
     font-size: 22px;
     font-family: Helvetica;
 }
+
+.graph-view {
+    width: 600px;
+}
+
+.graph-title {
+    font-family: Helvetica;
+    font-size: 20px;
+}
+
+.graph {
+    height: 250px;
+    width: 600px;
+}

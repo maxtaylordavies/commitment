@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Spinner } from "@blueprintjs/core";
 import "@blueprintjs/core/lib/css/blueprint.css"
 import "../styles/Home.css"
+import CalendarHeatmap from "react-calendar-heatmap"
+import "react-calendar-heatmap/dist/styles.css";
 
 export class Home extends Component {
     constructor(props) {
@@ -44,7 +46,14 @@ export class Home extends Component {
 
     graph = () => {
         return (
-            <p>graph</p>
+            <div style={{width: 700, marginBottom: 50}}>
+                <p className="graph-title">19 contributions in the last six months</p>
+                <CalendarHeatmap
+                    startDate={new Date('2019-01-01')}
+                    endDate={new Date('2019-07-01')}
+                    values={[]}
+                />
+            </div>
         )
     };
 
