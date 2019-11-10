@@ -28,6 +28,7 @@ export class Home extends Component {
                 window.backend.scan().then(() => {
                     this.setState({ loadingMessage: "Generating stats..." });
                     window.backend.stats().then(data => {
+                        console.log(data);
                         this.setState({ data })
                     })
                 })
@@ -45,19 +46,43 @@ export class Home extends Component {
     };
 
     graph = () => {
+        let total = this.calculateTotalCommits(this.state.data);
         return (
             <div style={{width: 700, marginBottom: 50}}>
-                <p className="graph-title">19 contributions in the last six months</p>
+                <p className="graph-title">{total} contributions in the last six months</p>
                 <CalendarHeatmap
-                    startDate={new Date('2019-01-01')}
-                    endDate={new Date('2019-07-01')}
-                    values={[]}
+                    startDate={new Date('2019-05-12')}
+                    endDate={new Date('2019-11-10')}
+                    values={this.parseData(this.state.data)}
+                    classForValue={(value) => {
+                        if (!value) {
+                            return 'color-empty';
+                        }
+                        return `color-scale-${value.count}`;
+                    }}
                 />
             </div>
         )
     };
 
+    calculateTotalCommits = (data) => {
+        let total = 0;
+        for (let i = 0; i < 183; i++) {
+            total += data[i].count
+        }
+        return total
+    };
+
+    parseData = (data) => {
+        for (let i = 0; i < 183; i++) {
+            let d = new Date(this.state.data[i].date.slice(0,10));
+            data[i].date = d;
+        }
+        return data
+    };
+
     render() {
+        console.log(this.state.data);
         return (
             <div className="container">
                 {this.state.data === null ? this.loading() : this.graph()}

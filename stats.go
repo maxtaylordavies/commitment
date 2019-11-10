@@ -8,26 +8,26 @@ import (
 	"time"
 )
 
-func stats() map[int]int {
-	const name = "max"
+type Day struct{
+	Date time.Time `json:"date"`
+	Count int `json:"count"`
+}
 
+func stats() []Day {
+	name := "max"
 	fp := getDotFilePath()
 	repos := parseFileLinesToSlice(fp)
 
-	commits := make(map[int]int, 183)
-	for i := 183; i > 0; i-- {
-		commits[i] = 0
-	}
+	commits := initSlice()
 
 	for _, path := range repos {
 		commits = fillCommits(name, path, commits)
 	}
 
-	log.Println(commits)
 	return commits
 }
 
-func fillCommits(name string, path string, commits map[int]int) map[int]int {
+func fillCommits(name string, path string, commits []Day) []Day {
 	repo, err := git.PlainOpen(path)
 	if err != nil {
 		log.Fatal("line 31 ", err)
@@ -44,9 +44,9 @@ func fillCommits(name string, path string, commits map[int]int) map[int]int {
 	}
 
 	err = iterator.ForEach(func(c *object.Commit) error {
-		daysAgo := daysSince(c.Author.When)
-		if strings.Contains(c.Author.Email, name) && daysAgo != 1000 {
-			commits[daysAgo]++
+		if strings.Contains(c.Author.Email, name) && daysSince(c.Author.When) != 1000 {
+			i := mapDateToIndex(c.Author.When)
+			commits[i].Count++
 		}
 		return nil
 	})
@@ -75,3 +75,17 @@ func daysSince(d time.Time) int {
 	}
 	return days
 }
+
+func initSlice() []Day {
+	slc := make([]Day, 183)
+	slc[0].Date = time.Now().AddDate(0, 0, -182)
+	for i := 1; i < 183; i++ {
+		slc[i].Date = slc[i-1].Date.AddDate(0, 0, 1)
+	}
+	return slc
+}
+
+func mapDateToIndex(date time.Time) int {
+	return 182 - daysSince(date)
+}
+
